@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Tic Tac Toe Pro</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <style>
@@ -21,6 +21,7 @@
       background-color: #001f4d;
       transition: background-color 0.4s ease;
       flex-direction: column;
+      overflow-x: hidden;
     }
 
     body.o-turn {
@@ -39,6 +40,18 @@
       color: white;
       margin-bottom: 15px;
       text-shadow: 0 0 5px #0ff;
+      transition: transform 0.5s ease, opacity 0.5s ease;
+    }
+
+    #status.slide-up {
+      transform: translateY(-50px);
+      opacity: 0;
+    }
+
+    #status.game-over {
+      transform: translateY(-50px);
+      opacity: 1;
+      text-shadow: 0 0 10px #fff;
     }
 
     .board {
@@ -72,48 +85,52 @@
       color: white;
     }
 
-    .popup, .menu-screen, .start-screen {
+    .cell.win {
+      background-color: #00cc66 !important;
+    }
+
+    .start-screen, .menu-screen, .popup {
       position: fixed;
-      top: 0; left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0,0,0,0.9);
       display: none;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 999;
+    }
+
+    .start-screen {
+      background: rgba(0, 0, 0, 1);
+    }
+
+    .menu-screen {
+      background: rgba(0, 0, 0, 0.9);
+    }
+
+    .popup {
+      pointer-events: none;
+      animation: slideDownPopup 0.6s ease;
     }
 
     .popup.show, .menu-screen.show, .start-screen.show {
       display: flex;
     }
 
-    .popup,
-    .start-screen,
-    .menu-screen {
+    .screen-box {
       background: #111;
       border: 10px solid #0ff;
-      padding: 25px 40px;
+      padding: 40px 60px;
       font-size: 2rem;
       color: #0ff;
       text-align: center;
       border-radius: 20px;
       text-shadow: 0 0 10px #0ff;
       box-shadow: 0 0 20px #0ff, inset 0 0 10px #0ff;
-      animation: slideDown 0.7s ease-out;
     }
+
     #popup-text {
-      background: #111;
-      border: 3px solid #0ff;
-      padding: 25px 40px;
       font-size: 2.5rem;
-      color: #0ff;
-      text-align: center;
-      border-radius: 20px;
-      text-shadow: 0 0 10px #0ff;
-      box-shadow: 0 0 20px #0ff, inset 0 0 10px #0ff;
-      animation: slideDown 0.7s ease-out;
+      margin-bottom: 20px;
     }
 
     button {
@@ -143,47 +160,86 @@
       font-size: 0.9rem;
     }
 
-    @keyframes slideDown {
-      from { transform: translateY(-200px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    .menu-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    @keyframes slideDownPopup {
+      from {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .game-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.5s ease;
+    }
+
+    .game-area.popup-active {
+      transform: translateY(-50px);
     }
   </style>
 </head>
 <body class="x-turn">
 
-  <!-- START SCREEN -->
   <div class="start-screen show" id="startScreen">
-    <h1>Tic Tac Toe Pro</h1>
-    <button onclick="startGame()">Play</button>
+    <div class="screen-box">
+      <h1>Tic Tac Toe Pro</h1>
+      <button onclick="startGame()">Play</button>
+    </div>
   </div>
 
-  <!-- MENU BUTTON -->
   <button class="menu-btn" onclick="openMenu()">Menu</button>
 
-  <!-- STATUS & BOARD -->
   <div id="status">Player X's turn</div>
-  <div class="board" id="board"></div>
 
-  <!-- WIN POPUP -->
-  <div class="popup" id="popup">
-    <div id="popup-text"></div>
-    <button onclick="restart()">Play Again</button>
+  <div class="game-area">
+    <div class="board" id="board"></div>
+
+    <div class="popup" id="popup">
+      <div class="screen-box">
+        <div id="popup-text"></div>
+        <button onclick="restart()">Play Again</button>
+      </div>
+    </div>
   </div>
 
-  <!-- MENU SCREEN -->
   <div class="menu-screen" id="menuScreen">
-    <h1>Paused</h1>
-    <button onclick="resumeGame()">Resume</button>
-    <button onclick="goHome()">Home</button>
+    <div class="screen-box">
+      <h1>Paused</h1>
+      <div class="menu-buttons">
+        <button onclick="resumeGame()">Resume</button>
+        <button onclick="goHome()">Home</button>
+      </div>
+    </div>
   </div>
 
   <script>
+    document.addEventListener('wheel', function(e) {
+      if (e.ctrlKey) e.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener('gesturestart', function(e) {
+      e.preventDefault();
+    });
+
     const board = document.getElementById("board");
     const statusText = document.getElementById("status");
     const popup = document.getElementById("popup");
     const popupText = document.getElementById("popup-text");
     const startScreen = document.getElementById("startScreen");
     const menuScreen = document.getElementById("menuScreen");
+    const gameArea = document.querySelector(".game-area");
 
     let cells = Array(9).fill("");
     let currentPlayer = "X";
@@ -208,12 +264,14 @@
       cell.textContent = currentPlayer;
       cell.classList.add(currentPlayer.toLowerCase());
 
-      if (checkWin()) {
+      const winPattern = checkWin();
+      if (winPattern) {
         gameActive = false;
-        showPopup(`🏆Player ${currentPlayer} Wins!`);
+        highlightWinningCells(winPattern);
+        showPopup(`🏆 Player ${currentPlayer} Wins!`);
       } else if (!cells.includes("")) {
         gameActive = false;
-        showPopup("😐It's a Draw!");
+        showPopup("😐 It's a Draw!");
       } else {
         currentPlayer = currentPlayer === "X" ? "O" : "X";
         updateTurnUI();
@@ -226,14 +284,30 @@
         [0,3,6],[1,4,7],[2,5,8],
         [0,4,8],[2,4,6]
       ];
-      return winPatterns.some(([a, b, c]) =>
+      return winPatterns.find(([a, b, c]) =>
         cells[a] && cells[a] === cells[b] && cells[b] === cells[c]
       );
     }
-    function showPopup(message) {
 
+    function highlightWinningCells(pattern) {
+      pattern.forEach(index => {
+        const cell = board.children[index];
+        cell.classList.add("win");
+      });
+    }
+
+    function showPopup(message) {
       popupText.innerHTML = message;
       popup.classList.add("show");
+      gameArea.classList.add("popup-active");
+
+      // Slide status up, then transform to Game Over
+      statusText.classList.add("slide-up");
+      setTimeout(() => {
+        statusText.classList.remove("slide-up");
+        statusText.classList.add("game-over");
+        statusText.textContent = "Game Over!";
+      }, 400);
     }
 
     function restart() {
@@ -241,14 +315,18 @@
       currentPlayer = "X";
       gameActive = true;
       popup.classList.remove("show");
+      gameArea.classList.remove("popup-active");
+      statusText.classList.remove("game-over");
       createBoard();
       updateTurnUI();
     }
 
     function updateTurnUI() {
-      statusText.textContent = `Player ${currentPlayer}'s turn`;
-      document.body.classList.remove("x-turn", "o-turn");
-      document.body.classList.add(`${currentPlayer.toLowerCase()}-turn`);
+      if (gameActive) {
+        statusText.textContent = `Player ${currentPlayer}'s turn`;
+        document.body.classList.remove("x-turn", "o-turn");
+        document.body.classList.add(`${currentPlayer.toLowerCase()}-turn`);
+      }
     }
 
     function startGame() {
@@ -271,17 +349,15 @@
     function goHome() {
       menuScreen.classList.remove("show");
       popup.classList.remove("show");
+      gameArea.classList.remove("popup-active");
       startScreen.classList.add("show");
+      statusText.classList.remove("game-over");
       cells = Array(9).fill("");
       currentPlayer = "X";
       gameActive = false;
     }
 
-    // Initial setup
     document.body.classList.add("x-turn");
-     
-   
   </script>
 </body>
 </html>
-V

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Tic Tac Toe Pro</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <style>
@@ -15,17 +15,29 @@
 
     body {
       display: flex;
-      align-items: center;
-      justify-content: center;
       min-height: 100vh;
       background-color: #001f4d;
       transition: background-color 0.4s ease;
-      flex-direction: column;
-      overflow: hidden;
     }
 
     body.o-turn {
       background-color: #4d0000;
+    }
+
+    .left-panel {
+      width: 60%;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .right-panel {
+      width: 40%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     h1 {
@@ -43,7 +55,6 @@
     }
 
     .board {
-      position: relative;
       display: grid;
       grid-template-columns: repeat(3, 100px);
       gap: 10px;
@@ -74,52 +85,35 @@
       color: white;
     }
 
-    .popup, .menu-screen {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      right: 20px;
-      bottom: 20px;
-      background: rgba(0,0,0,0.7);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      border: 10px solid #0ff;
-      border-radius: 20px;
-      padding: 25px 40px;
-      text-shadow: 0 0 10px #0ff;
-      box-shadow: 0 0 20px #0ff, inset 0 0 10px #0ff;
-      animation: slideDown 0.7s ease-out;
+    .cell.win {
+      background-color: #00cc66 !important;
     }
 
-    .start-screen {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      right: 20px;
-      bottom: 20px;
-      background: #000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
+    .popup {
+      width: 100%;
+      max-width: 400px;
+      background: #111;
       border: 10px solid #0ff;
+      padding: 40px 30px;
+      font-size: 2rem;
+      color: #0ff;
+      text-align: center;
       border-radius: 20px;
-      padding: 25px 40px;
       text-shadow: 0 0 10px #0ff;
       box-shadow: 0 0 20px #0ff, inset 0 0 10px #0ff;
-      animation: slideDown 0.7s ease-out;
-    }
-
-    .popup.show, .menu-screen.show, .start-screen.show {
-      display: flex;
+      display: none;
+      animation: slideRight 0.5s ease-out;
       flex-direction: column;
+      justify-content: center;
+    }
+
+    .popup.show {
+      display: flex;
     }
 
     #popup-text {
-      font-size: 2rem;
-      color: #0ff;
+      font-size: 2.2rem;
+      margin-bottom: 20px;
     }
 
     button {
@@ -147,50 +141,88 @@
       left: 20px;
       padding: 5px 15px;
       font-size: 0.9rem;
-      z-index: 1;
     }
 
-    .win-line {
-      position: absolute;
-      height: 6px;
-      background-color: #0ff;
-      box-shadow: 0 0 15px #0ff;
-      border-radius: 3px;
-      animation: drawLine 0.5s ease forwards;
+    .start-screen, .menu-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
     }
 
-    @keyframes drawLine {
-      from { width: 0; }
-      to { width: 310px; }
+    .start-screen.show, .menu-screen.show {
+      display: flex;
+    }
+
+    .screen-box {
+      background: #111;
+      border: 10px solid #0ff;
+      padding: 40px 60px;
+      font-size: 2rem;
+      color: #0ff;
+      text-align: center;
+      border-radius: 20px;
+      text-shadow: 0 0 10px #0ff;
+      box-shadow: 0 0 20px #0ff, inset 0 0 10px #0ff;
+      animation: slideDown 0.7s ease-out;
+    }
+
+    .menu-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 30px;
     }
 
     @keyframes slideDown {
       from { transform: translateY(-200px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
+
+    @keyframes slideRight {
+      from { transform: translateX(100px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
   </style>
 </head>
 <body class="x-turn">
 
   <div class="start-screen show" id="startScreen">
-    <h1>Tic Tac Toe Pro</h1>
-    <button onclick="startGame()">Play</button>
+    <div class="screen-box">
+      <h1>Tic Tac Toe Pro</h1>
+      <button onclick="startGame()">Play</button>
+    </div>
   </div>
 
-  <button class="menu-btn" onclick="openMenu()" id="menuBtn">Menu</button>
+  <button class="menu-btn" onclick="openMenu()">Menu</button>
 
-  <div id="status">Player X's turn</div>
-  <div class="board" id="board"></div>
+  <div class="left-panel">
+    <h1>Tic Tac Toe</h1>
+    <div id="status">Player X's turn</div>
+    <div class="board" id="board"></div>
+  </div>
 
-  <div class="popup" id="popup">
-    <div id="popup-text"></div>
-    <button onclick="restart()">Play Again</button>
+  <div class="right-panel">
+    <div class="popup" id="popup">
+      <div id="popup-text"></div>
+      <button onclick="restart()">Play Again</button>
+    </div>
   </div>
 
   <div class="menu-screen" id="menuScreen">
-    <h1>Paused</h1>
-    <button onclick="resumeGame()">Resume</button>
-    <button onclick="goHome()">Home</button>
+    <div class="screen-box">
+      <h1>Paused</h1>
+      <div class="menu-buttons">
+        <button onclick="resumeGame()">Resume</button>
+        <button onclick="goHome()">Home</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -200,12 +232,10 @@
     const popupText = document.getElementById("popup-text");
     const startScreen = document.getElementById("startScreen");
     const menuScreen = document.getElementById("menuScreen");
-    const menuBtn = document.getElementById("menuBtn");
 
     let cells = Array(9).fill("");
     let currentPlayer = "X";
     let gameActive = false;
-    let winLine;
 
     function createBoard() {
       board.innerHTML = "";
@@ -226,12 +256,14 @@
       cell.textContent = currentPlayer;
       cell.classList.add(currentPlayer.toLowerCase());
 
-      if (checkWin()) {
+      const winPattern = checkWin();
+      if (winPattern) {
         gameActive = false;
-        showPopup(`🏆Player ${currentPlayer} Wins!`);
+        showPopup(`🏆 Player ${currentPlayer} Wins!`);
+        highlightWinningCells(winPattern);
       } else if (!cells.includes("")) {
         gameActive = false;
-        showPopup("😐It's a Draw!");
+        showPopup("😐 It's a Draw!");
       } else {
         currentPlayer = currentPlayer === "X" ? "O" : "X";
         updateTurnUI();
@@ -244,43 +276,16 @@
         [0,3,6],[1,4,7],[2,5,8],
         [0,4,8],[2,4,6]
       ];
-      for (let pattern of winPatterns) {
-        const [a,b,c] = pattern;
-        if (cells[a] && cells[a] === cells[b] && cells[b] === cells[c]) {
-          drawWinLine(pattern);
-          return true;
-        }
-      }
-      return false;
+      return winPatterns.find(([a, b, c]) =>
+        cells[a] && cells[a] === cells[b] && cells[b] === cells[c]
+      );
     }
 
-    function drawWinLine(pattern) {
-      const coords = [
-        { top: 50, left: 0, rotate: 0 },      // 0-1-2
-        { top: 160, left: 0, rotate: 0 },     // 3-4-5
-        { top: 270, left: 0, rotate: 0 },     // 6-7-8
-        { top: 0, left: 50, rotate: 90 },     // 0-3-6
-        { top: 0, left: 160, rotate: 90 },    // 1-4-7
-        { top: 0, left: 270, rotate: 90 },    // 2-5-8
-        { top: 0, left: 0, rotate: 45 },      // 0-4-8
-        { top: 0, left: 0, rotate: -45 }      // 2-4-6
-      ];
-
-      winLine = document.createElement("div");
-      winLine.classList.add("win-line");
-      const i = [
-        [0,1,2],[3,4,5],[6,7,8],
-        [0,3,6],[1,4,7],[2,5,8],
-        [0,4,8],[2,4,6]
-      ].findIndex(p => JSON.stringify(p) === JSON.stringify(pattern));
-
-      Object.assign(winLine.style, {
-        top: coords[i].top + "px",
-        left: coords[i].left + "px",
-        transform: `rotate(${coords[i].rotate}deg)`,
+    function highlightWinningCells(pattern) {
+      pattern.forEach(index => {
+        const cell = board.children[index];
+        cell.classList.add("win");
       });
-
-      board.appendChild(winLine);
     }
 
     function showPopup(message) {
@@ -293,7 +298,6 @@
       currentPlayer = "X";
       gameActive = true;
       popup.classList.remove("show");
-      if (winLine) winLine.remove();
       createBoard();
       updateTurnUI();
     }
@@ -306,7 +310,6 @@
 
     function startGame() {
       startScreen.classList.remove("show");
-      menuBtn.style.display = "block";
       gameActive = true;
       createBoard();
       updateTurnUI();
@@ -315,11 +318,6 @@
     function openMenu() {
       gameActive = false;
       menuScreen.classList.add("show");
-      if (currentPlayer === "X") {
-        menuScreen.style.backgroundColor = "#001f4d";
-      } else {
-        menuScreen.style.backgroundColor = "#4d0000";
-      }
     }
 
     function resumeGame() {
@@ -331,16 +329,11 @@
       menuScreen.classList.remove("show");
       popup.classList.remove("show");
       startScreen.classList.add("show");
-      menuBtn.style.display = "none";
       cells = Array(9).fill("");
       currentPlayer = "X";
       gameActive = false;
-      if (winLine) winLine.remove();
-      board.innerHTML = "";
     }
 
-    // Initial setup
-    menuBtn.style.display = "none";
     document.body.classList.add("x-turn");
   </script>
 </body>
