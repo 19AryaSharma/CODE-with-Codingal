@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Tic Tac Toe Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #001f4d;
+      transition: background-color 0.4s ease;
+      flex-direction: column;
+    }
+
+    body.o-turn {
+      background-color: #4d0000;
+    }
+
+    h1 {
+      color: white;
+      font-size: 3rem;
+      text-shadow: 0 0 10px #0ff;
+      margin-bottom: 20px;
+    }
+
+    #status {
+      font-size: 1.5rem;
+      color: white;
+      margin-bottom: 15px;
+      text-shadow: 0 0 5px #0ff;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .cell {
+      width: 100px;
+      height: 100px;
+      font-size: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      transition: 0.2s;
+    }
+
+    .cell.x {
+      background-color: #66b3ff;
+      color: white;
+    }
+
+    .cell.o {
+      background-color: #ff6666;
+      color: white;
+    }
+
+    .cell.win {
+      background-color: #00cc66 !important;
+    }
+
+    .start-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 1);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .menu-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 104vh;
+      background: rgba(0, 0, 0, 0);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .popup {
+  position: relative;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+
+    .popup.show, .menu-screen.show, .start-screen.show {
+      display: flex;
+    }
+
+    .screen-box {
+      background: #111;
+      border: 10px solid #0ff;
+      padding: 40px 60px;
+      font-size: 2rem;
+      color: #0ff;
+      text-align: center;
+      border-radius: 20px;
+      text-shadow: 0 0 10px #0ff;
+      box-shadow: 0 0 20px #0ff, inset 0 0 10px #0ff;
+      animation: slideDown 0.7s ease-out;
+    }
+
+    #popup-text {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    button {
+      margin-top: 20px;
+      background: #000;
+      color: #0ff;
+      border: 2px solid #0ff;
+      padding: 10px 30px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 10px;
+      text-shadow: 0 0 5px #0ff;
+      box-shadow: 0 0 15px #0ff;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #0ff;
+      color: #000;
+    }
+
+    .menu-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 5px 15px;
+      font-size: 0.9rem;
+    }
+
+    .menu-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-200px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body class="x-turn">
+
+  <div class="start-screen show" id="startScreen">
+    <div class="screen-box">
+      <h1>Tic Tac Toe </h1>
+      <button onclick="startGame()">Play</button>
+    </div>
+  </div>
+
+  <button class="menu-btn" onclick="openMenu()">Menu</button>
+
+  <div id="status">Player X's turn</div>
+  <div class="board" id="board"></div>
+
+  <div class="popup" id="popup">
+    <div class="screen-box">
+      <div id="popup-text"></div>
+      <button onclick="restart()">Play Again</button>
+    </div>
+  </div>
+
+  <div class="menu-screen" id="menuScreen">
+    <div class="screen-box">
+      <h1>Paused</h1>
+      <div class="menu-buttons">
+        <button onclick="resumeGame()">Resume</button>
+        <button onclick="goHome()">Home</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+     // 🚫 Disable Ctrl + Zoom and Pinch Zoom
+  document.addEventListener('wheel', function(e) {
+    if (e.ctrlKey) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  document.addEventListener('gesturestart', function(e) {
+    e.preventDefault();
+  }); 
+    const board = document.getElementById("board");
+    const statusText = document.getElementById("status");
+    const popup = document.getElementById("popup");
+    const popupText = document.getElementById("popup-text");
+    const startScreen = document.getElementById("startScreen");
+    const menuScreen = document.getElementById("menuScreen");
+
+    let cells = Array(9).fill("");
+    let currentPlayer = "X";
+    let gameActive = false;
+
+    function createBoard() {
+      board.innerHTML = "";
+      cells.forEach((cell, index) => {
+        const cellDiv = document.createElement("div");
+        cellDiv.classList.add("cell");
+        cellDiv.textContent = cell;
+        if (cell) cellDiv.classList.add(cell.toLowerCase());
+        cellDiv.addEventListener("click", () => makeMove(cellDiv, index));
+        board.appendChild(cellDiv);
+      });
+    }
+
+    function makeMove(cell, index) {
+      if (!gameActive || cells[index] !== "") return;
+
+      cells[index] = currentPlayer;
+      cell.textContent = currentPlayer;
+      cell.classList.add(currentPlayer.toLowerCase());
+
+      const winPattern = checkWin();
+      if (winPattern) {
+        gameActive = false;
+        showPopup(`🏆 Player ${currentPlayer} Wins!`);
+        highlightWinningCells(winPattern);
+      } else if (!cells.includes("")) {
+        gameActive = false;
+        showPopup("😐 It's a Draw!");
+      } else {
+        currentPlayer = currentPlayer === "X" ? "O" : "X";
+        updateTurnUI();
+      }
+    }
+
+    function checkWin() {
+      const winPatterns = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      return winPatterns.find(([a, b, c]) =>
+        cells[a] && cells[a] === cells[b] && cells[b] === cells[c]
+      );
+    }
+
+    function highlightWinningCells(pattern) {
+      pattern.forEach(index => {
+        const cell = board.children[index];
+        cell.classList.add("win");
+      });
+    }
+
+    function showPopup(message) {
+      popupText.innerHTML = message;
+      popup.classList.add("show");
+    }
+
+    function restart() {
+      cells = Array(9).fill("");
+      currentPlayer = "X";
+      gameActive = true;
+      popup.classList.remove("show");
+      createBoard();
+      updateTurnUI();
+    }
+
+    function updateTurnUI() {
+      statusText.textContent = `Player ${currentPlayer}'s turn`;
+      document.body.classList.remove("x-turn", "o-turn");
+      document.body.classList.add(`${currentPlayer.toLowerCase()}-turn`);
+    }
+
+    function startGame() {
+      startScreen.classList.remove("show");
+      gameActive = true;
+      createBoard();
+      updateTurnUI();
+    }
+
+    function openMenu() {
+      gameActive = false;
+      menuScreen.classList.add("show");
+    }
+
+    function resumeGame() {
+      gameActive = true;
+      menuScreen.classList.remove("show");
+    }
+
+    function goHome() {
+      menuScreen.classList.remove("show");
+      popup.classList.remove("show");
+      startScreen.classList.add("show");
+      cells = Array(9).fill("");
+      currentPlayer = "X";
+      gameActive = false;
+    }
+
+    document.body.classList.add("x-turn");
+  </script>
+</body>
+</html>
