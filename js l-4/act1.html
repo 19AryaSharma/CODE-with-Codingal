@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h2>Javascript objects and its properties</h2>
+        <p>There are two different ways to access an object properties.</p>
+        <p>You can use .property or ["property"].</p>
+        <P id="demo"></P> 
+        <script>
+            // Create an object
+            var person ={
+                firstName: "Arya",
+                age:13,
+           }
+            // Access properties using dot notation
+            document.getElementById("demo").innerHTML = person.firstName + " is " + person.age + " years old.";
+
+            // Access properties using bracket notation
+            document.getElementById("demo").innerHTML += "<br>" + person["firstName"] + " is " + person["age"] + " years old.";
+        </script>
+    </body>
+</html>
