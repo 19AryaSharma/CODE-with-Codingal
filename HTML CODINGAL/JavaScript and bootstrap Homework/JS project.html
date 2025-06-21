@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <p id="demo"></p>
+        <script>
+            var day;
+            switch 
+            (new Date().getDay()) {
+                case 0:
+                    day = "Sunday";
+                    break;
+                case 1:
+                    day = "Monday";
+                    break;
+                case 2:
+                    day = "Tuesday";
+                    break;
+                case 3:
+                    day = "Wednesday";
+                    break;
+                case 4:
+                    day = "Thursday";
+                    break;
+                case 5:
+                    day = "Friday";
+                    break;
+                case 6:
+                    day = "Saturday";
+            }
+            document.getElementById("demo").innerHTML = "Today is " + day  + new Date().getFullYear() + ".";
+             
+            var date;
+            switch (new Date().getDate()) {
+                case 1:
+                case 21:
+                case 31:
+                    date = "st";
+                    break;
+                case 2:
+                case 22:
+                    date = "nd";
+                    break;
+                case 3:
+                case 23:
+                    date = "rd";
+                    break;
+                default:
+                    date = "th";
+            } 
+            document.getElementById("demo").innerHTML += " Today is the " + new Date().getDate() + date + " date of the month.";
+            var month;
+            switch (new Date().getMonth()) {
+                case 0:
+                    month = "January";
+                    break;
+                case 1:
+                    month = "February";
+                    break;
+                case 2:
+                    month = "March";
+                    break;
+                case 3:
+                    month = "April";
+                    break;
+                case 4:
+                    month = "May";
+                    break;
+                case 5:
+                    month = "June";
+                    break;
+                case 6:
+                    month = "July";
+                    break;
+                case 7:
+                    month = "August";
+                    break;
+                case 8:
+                    month = "September";
+                    break;
+                case 9:
+                    month = "October";
+                    break;
+                case 10:
+                    month = "November";
+                    break;
+                case 11:
+                    month = "December";
+            }
+            document.getElementById("demo").innerHTML += " The current month is " + month + ".";
+        </script>
+    </body>
+</html>

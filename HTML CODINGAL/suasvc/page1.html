@@ -1,0 +1,54 @@
+
+<!doctype html>
+<html>
+    <head>
+        <title>PAGE 1</title>
+        </head>
+        <style>
+            #loaderOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.9);
+  z-index: 9999;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #555;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+        </style>
+        <script>
+  function goToNextPage() {
+    document.getElementById("loaderOverlay").style.display = "flex";
+    setTimeout(function () {
+      window.location.href = "page2.html"; // Change this to your real target
+    }, 2000);
+  }
+</script>
+
+    <body>
+<a href="page2.html" class="btn btn-info">Next Page</a>
+<div id="loaderOverlay">
+  <div class="loader">
+    
+  </div>
+</div>
+
+</body>
+</html>

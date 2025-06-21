@@ -15,29 +15,16 @@
 
     body {
       display: flex;
+      align-items: center;
+      justify-content: center;
       min-height: 100vh;
       background-color: #001f4d;
       transition: background-color 0.4s ease;
+      flex-direction: column;
     }
 
     body.o-turn {
       background-color: #4d0000;
-    }
-
-    .left-panel {
-      width: 60%;
-      padding: 40px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-    }
-
-    .right-panel {
-      width: 40%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     h1 {
@@ -47,11 +34,45 @@
       margin-bottom: 20px;
     }
 
-    #status {
-      font-size: 1.5rem;
-      color: white;
-      margin-bottom: 15px;
-      text-shadow: 0 0 5px #0ff;
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-200px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes glowFade {
+      0% { text-shadow: 0 0 5px #fff, 0 0 10px #0ff; opacity: 0; }
+      50% { opacity: 1; }
+      100% { text-shadow: 0 0 20px #0ff, 0 0 30px #0ff; }
+    }
+
+    .slide-up {
+      animation: slideUp 0.5s ease-out;
+    }
+
+    .popup-slide-down .screen-box {
+      animation: slideDown 0.5s ease-out;
+    }
+
+    .glow-gameover {
+      animation: glowFade 1s ease-out;
+      color: #0ff;
     }
 
     .board {
@@ -89,31 +110,77 @@
       background-color: #00cc66 !important;
     }
 
+    .start-screen, .menu-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 1);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
     .popup {
       width: 100%;
-      max-width: 400px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .popup.show, .menu-screen.show, .start-screen.show {
+      display: flex;
+    }
+
+    .screen-box {
       background: #111;
       border: 10px solid #0ff;
-      padding: 40px 30px;
+      padding: 40px 60px;
       font-size: 2rem;
       color: #0ff;
       text-align: center;
       border-radius: 20px;
       text-shadow: 0 0 10px #0ff;
       box-shadow: 0 0 20px #0ff, inset 0 0 10px #0ff;
-      display: none;
-      animation: slideRight 0.5s ease-out;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .popup.show {
-      display: flex;
     }
 
     #popup-text {
-      font-size: 2.2rem;
+      font-size: 2.5rem;
       margin-bottom: 20px;
+    }
+
+    .game-start-popup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 1);
+      z-index: 1000;
+    }
+
+    .game-start-popup-text {
+      font-size: 3rem;
+      color: #0ff;
+      text-shadow: 0 0 20px #0ff;
+      animation: slideDown 0.7s ease-out;
+    }
+
+    .game-hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.9);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .game-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
     }
 
     button {
@@ -143,36 +210,6 @@
       font-size: 0.9rem;
     }
 
-    .start-screen, .menu-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: #000;
-      z-index: 1000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .start-screen.show, .menu-screen.show {
-      display: flex;
-    }
-
-    .screen-box {
-      background: #111;
-      border: 10px solid #0ff;
-      padding: 40px 60px;
-      font-size: 2rem;
-      color: #0ff;
-      text-align: center;
-      border-radius: 20px;
-      text-shadow: 0 0 10px #0ff;
-      box-shadow: 0 0 20px #0ff, inset 0 0 10px #0ff;
-      animation: slideDown 0.7s ease-out;
-    }
-
     .menu-buttons {
       display: flex;
       flex-direction: column;
@@ -180,14 +217,22 @@
       margin-top: 30px;
     }
 
-    @keyframes slideDown {
-      from { transform: translateY(-200px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    .game-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.5s ease;
     }
 
-    @keyframes slideRight {
-      from { transform: translateX(100px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+    .game-area.popup-active {
+      transform: translateY(-50px);
+    }
+
+    #status {
+      font-size: 1.5rem;
+      color: white;
+      margin-bottom: 15px;
+      text-shadow: 0 0 5px #0ff;
     }
   </style>
 </head>
@@ -200,18 +245,22 @@
     </div>
   </div>
 
-  <button class="menu-btn" onclick="openMenu()">Menu</button>
-
-  <div class="left-panel">
-    <h1>Tic Tac Toe</h1>
-    <div id="status">Player X's turn</div>
-    <div class="board" id="board"></div>
+  <div class="game-start-popup" id="gameStartPopup">
+    <div class="game-start-popup-text">GAME START!</div>
   </div>
 
-  <div class="right-panel">
+  <button class="menu-btn" onclick="openMenu()">Menu</button>
+
+  <div class="game-area game-hidden" id="gameArea">
+    <div id="status">Player X's turn</div>
+
+    <div class="board" id="board"></div>
+
     <div class="popup" id="popup">
-      <div id="popup-text"></div>
-      <button onclick="restart()">Play Again</button>
+      <div class="screen-box">
+        <div id="popup-text"></div>
+        <button onclick="restart()">Play Again</button>
+      </div>
     </div>
   </div>
 
@@ -226,12 +275,17 @@
   </div>
 
   <script>
+    document.addEventListener('wheel', e => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
+    document.addEventListener('gesturestart', e => e.preventDefault());
+
     const board = document.getElementById("board");
     const statusText = document.getElementById("status");
     const popup = document.getElementById("popup");
     const popupText = document.getElementById("popup-text");
     const startScreen = document.getElementById("startScreen");
     const menuScreen = document.getElementById("menuScreen");
+    const gameStartPopup = document.getElementById("gameStartPopup");
+    const gameArea = document.getElementById("gameArea");
 
     let cells = Array(9).fill("");
     let currentPlayer = "X";
@@ -251,11 +305,9 @@
 
     function makeMove(cell, index) {
       if (!gameActive || cells[index] !== "") return;
-
       cells[index] = currentPlayer;
       cell.textContent = currentPlayer;
       cell.classList.add(currentPlayer.toLowerCase());
-
       const winPattern = checkWin();
       if (winPattern) {
         gameActive = false;
@@ -290,29 +342,51 @@
 
     function showPopup(message) {
       popupText.innerHTML = message;
-      popup.classList.add("show");
+      popup.classList.add("show", "popup-slide-down");
+      statusText.textContent = "Game Over!";
+      statusText.classList.add("glow-gameover");
+      gameArea.classList.add("popup-active");
     }
 
     function restart() {
       cells = Array(9).fill("");
       currentPlayer = "X";
       gameActive = true;
-      popup.classList.remove("show");
+      popup.classList.remove("show", "popup-slide-down");
+      statusText.classList.remove("glow-gameover");
+      gameArea.classList.remove("popup-active");
       createBoard();
       updateTurnUI();
     }
 
     function updateTurnUI() {
       statusText.textContent = `Player ${currentPlayer}'s turn`;
+      statusText.classList.remove("glow-gameover");
+      statusText.classList.remove("slide-up");
+      void statusText.offsetWidth;
+      statusText.classList.add("slide-up");
       document.body.classList.remove("x-turn", "o-turn");
       document.body.classList.add(`${currentPlayer.toLowerCase()}-turn`);
     }
 
     function startGame() {
       startScreen.classList.remove("show");
-      gameActive = true;
-      createBoard();
-      updateTurnUI();
+      showGameStartPopup();
+    }
+
+    function showGameStartPopup() {
+      gameStartPopup.style.display = "flex";
+      gameArea.classList.remove("game-visible");
+      gameArea.classList.add("game-hidden");
+
+      setTimeout(() => {
+        gameStartPopup.style.display = "none";
+        gameArea.classList.remove("game-hidden");
+        gameArea.classList.add("game-visible");
+        gameActive = true;
+        createBoard();
+        updateTurnUI();
+      }, 1500);
     }
 
     function openMenu() {
@@ -327,7 +401,9 @@
 
     function goHome() {
       menuScreen.classList.remove("show");
-      popup.classList.remove("show");
+      popup.classList.remove("show", "popup-slide-down");
+      statusText.classList.remove("glow-gameover");
+      gameArea.classList.remove("popup-active");
       startScreen.classList.add("show");
       cells = Array(9).fill("");
       currentPlayer = "X";

@@ -34,11 +34,19 @@
       margin-bottom: 20px;
     }
 
-    #status {
-      font-size: 1.5rem;
-      color: white;
-      margin-bottom: 15px;
-      text-shadow: 0 0 5px #0ff;
+    .slide-up {
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
 
     .board {
@@ -101,15 +109,12 @@
     }
 
     .popup {
-  position: relative;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-}
-
+      width: 100%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
 
     .popup.show, .menu-screen.show, .start-screen.show {
       display: flex;
@@ -171,26 +176,65 @@
       from { transform: translateY(-200px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
+
+    .game-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.5s ease;
+    }
+
+    .game-area.popup-active {
+      transform: translateY(-50px);
+    }
+
+    #status {
+      font-size: 1.5rem;
+      color: white;
+      margin-bottom: 15px;
+      text-shadow: 0 0 5px #0ff;
+    }
+
+    /* Game Start Popup */
+    .start-popup {
+      position: fixed;
+      top: 30%;
+      color: #0ff;
+      font-size: 3rem;
+      background: transparent;
+      border: none;
+      text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+      animation: fadePopup 1.5s ease-out forwards;
+      z-index: 1000;
+    }
+
+    @keyframes fadePopup {
+      0% { opacity: 0; transform: scale(0.9); }
+      20% { opacity: 1; transform: scale(1); }
+      80% { opacity: 1; }
+      100% { opacity: 0; transform: scale(1.1); }
+    }
   </style>
 </head>
 <body class="x-turn">
 
   <div class="start-screen show" id="startScreen">
     <div class="screen-box">
-      <h1>Tic Tac Toe </h1>
+      <h1>Tic Tac Toe Pro</h1>
       <button onclick="startGame()">Play</button>
     </div>
   </div>
 
   <button class="menu-btn" onclick="openMenu()">Menu</button>
 
-  <div id="status">Player X's turn</div>
-  <div class="board" id="board"></div>
-
-  <div class="popup" id="popup">
-    <div class="screen-box">
-      <div id="popup-text"></div>
-      <button onclick="restart()">Play Again</button>
+  <div class="game-area">
+    <div id="status">Player X's turn</div>
+    <div class="board" id="board"></div>
+    <div class="popup" id="popup">
+      <div class="screen-box">
+        <div id="popup-text"></div>
+        <button onclick="restart()">Play Again</button>
+      </div>
     </div>
   </div>
 
@@ -204,23 +248,26 @@
     </div>
   </div>
 
-  <script>
-     // 🚫 Disable Ctrl + Zoom and Pinch Zoom
-  document.addEventListener('wheel', function(e) {
-    if (e.ctrlKey) {
-      e.preventDefault();
-    }
-  }, { passive: false });
+  <!-- Game Start Popup -->
+  <div id="gameStartPopup" class="start-popup" style="display: none;">GAME START!</div>
 
-  document.addEventListener('gesturestart', function(e) {
-    e.preventDefault();
-  }); 
+  <script>
+    document.addEventListener('wheel', function(e) {
+      if (e.ctrlKey) e.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener('gesturestart', function(e) {
+      e.preventDefault();
+    });
+
     const board = document.getElementById("board");
     const statusText = document.getElementById("status");
     const popup = document.getElementById("popup");
     const popupText = document.getElementById("popup-text");
     const startScreen = document.getElementById("startScreen");
     const menuScreen = document.getElementById("menuScreen");
+    const gameArea = document.querySelector(".game-area");
+    const gameStartPopup = document.getElementById("gameStartPopup");
 
     let cells = Array(9).fill("");
     let currentPlayer = "X";
@@ -280,6 +327,8 @@
     function showPopup(message) {
       popupText.innerHTML = message;
       popup.classList.add("show");
+      gameArea.classList.add("popup-active");
+      statusText.textContent = "Game Over!";
     }
 
     function restart() {
@@ -287,21 +336,33 @@
       currentPlayer = "X";
       gameActive = true;
       popup.classList.remove("show");
+      gameArea.classList.remove("popup-active");
       createBoard();
       updateTurnUI();
     }
 
     function updateTurnUI() {
       statusText.textContent = `Player ${currentPlayer}'s turn`;
+      statusText.classList.remove("slide-up");
+      void statusText.offsetWidth;
+      statusText.classList.add("slide-up");
       document.body.classList.remove("x-turn", "o-turn");
       document.body.classList.add(`${currentPlayer.toLowerCase()}-turn`);
     }
 
     function startGame() {
       startScreen.classList.remove("show");
+      showGameStartPopup();
       gameActive = true;
       createBoard();
       updateTurnUI();
+    }
+
+    function showGameStartPopup() {
+      gameStartPopup.style.display = "block";
+      setTimeout(() => {
+        gameStartPopup.style.display = "none";
+      }, 1500);
     }
 
     function openMenu() {
@@ -317,6 +378,7 @@
     function goHome() {
       menuScreen.classList.remove("show");
       popup.classList.remove("show");
+      gameArea.classList.remove("popup-active");
       startScreen.classList.add("show");
       cells = Array(9).fill("");
       currentPlayer = "X";

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JavaScript Array</title>
+    </head>
+    <body>
+       <h2>javascript arrays</h2>
+       <h2>join( ) and pop( )</h2>
+       <p>The join( ) method join array elements into a string and the pop( ) method remotes the last element from an array.</p>
+
+       <p id="demo"></p>
+       <p id="myfirstpop"></p>
+         <p id="mysecondpop"></p>
+         <script>
+            var fruits = ["Banana", "Orange", "Apple", "Mango"];
+            var text = fruits.join(", ");
+            document.getElementById("demo").innerHTML = text;
+            var myfirstpop = fruits.pop();
+            document.getElementById("myfirstpop").innerHTML = "The first pop is: " + myfirstpop;
+            var mysecondpop = fruits.pop();
+            document.getElementById("mysecondpop").innerHTML = "The second pop is: " + mysecondpop;     
+            
+         </script>
+    </body>
+</html>

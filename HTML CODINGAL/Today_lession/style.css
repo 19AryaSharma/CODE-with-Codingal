@@ -1,0 +1,19 @@
+h3 {
+    color:rgb(132, 0, 255);
+}
+h4 {
+    color:greenyellow;
+}
+.myclass {
+    color:brown;
+}
+#myid {
+    color:pink;
+}
+h5,p{
+    color:black;
+}
+*{
+    font-size:30px ;
+    font-weight:500 ;
+}

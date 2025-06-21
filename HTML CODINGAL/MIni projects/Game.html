@@ -34,11 +34,19 @@
       margin-bottom: 20px;
     }
 
-    #status {
-      font-size: 1.5rem;
-      color: white;
-      margin-bottom: 15px;
-      text-shadow: 0 0 5px #0ff;
+    .slide-up {
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
 
     .board {
@@ -76,24 +84,12 @@
       background-color: #00cc66 !important;
     }
 
-    .start-screen {
+    .start-screen, .menu-screen {
       position: fixed;
       top: 0; left: 0;
       width: 100vw;
       height: 100vh;
       background: rgba(0, 0, 0, 1);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-    }
-
-    .menu-screen {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 104vh;
-      background: rgba(0, 0, 0, 0);
       display: none;
       align-items: center;
       justify-content: center;
@@ -128,6 +124,38 @@
     #popup-text {
       font-size: 2.5rem;
       margin-bottom: 20px;
+    }
+
+    .game-start-popup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 1);
+      z-index: 1000;
+    }
+
+    .game-start-popup-text {
+      font-size: 3rem;
+      color: #0ff;
+      text-shadow: 0 0 20px #0ff;
+      animation: slideDown 0.7s ease-out;
+    }
+
+    .game-hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.9);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .game-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
     }
 
     button {
@@ -169,7 +197,6 @@
       to { transform: translateY(0); opacity: 1; }
     }
 
-    /* ✅ Added for board slide */
     .game-area {
       display: flex;
       flex-direction: column;
@@ -179,6 +206,13 @@
 
     .game-area.popup-active {
       transform: translateY(-50px);
+    }
+
+    #status {
+      font-size: 1.5rem;
+      color: white;
+      margin-bottom: 15px;
+      text-shadow: 0 0 5px #0ff;
     }
   </style>
 </head>
@@ -191,12 +225,15 @@
     </div>
   </div>
 
+  <div class="game-start-popup" id="gameStartPopup">
+    <div class="game-start-popup-text">GAME START!</div>
+  </div>
+
   <button class="menu-btn" onclick="openMenu()">Menu</button>
 
-  <div id="status">Player X's turn</div>
+  <div class="game-area game-hidden" id="gameArea">
+    <div id="status">Player X's turn</div>
 
-  <!-- ✅ Step 1: Wrap board and popup inside .game-area -->
-  <div class="game-area">
     <div class="board" id="board"></div>
 
     <div class="popup" id="popup">
@@ -218,16 +255,8 @@
   </div>
 
   <script>
-    // 🚫 Disable Ctrl + Zoom and Pinch Zoom
-    document.addEventListener('wheel', function(e) {
-      if (e.ctrlKey) {
-        e.preventDefault();
-      }
-    }, { passive: false });
-
-    document.addEventListener('gesturestart', function(e) {
-      e.preventDefault();
-    }); 
+    document.addEventListener('wheel', e => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
+    document.addEventListener('gesturestart', e => e.preventDefault());
 
     const board = document.getElementById("board");
     const statusText = document.getElementById("status");
@@ -235,7 +264,8 @@
     const popupText = document.getElementById("popup-text");
     const startScreen = document.getElementById("startScreen");
     const menuScreen = document.getElementById("menuScreen");
-    const gameArea = document.querySelector(".game-area"); // ✅ Step 3 - select game area
+    const gameStartPopup = document.getElementById("gameStartPopup");
+    const gameArea = document.getElementById("gameArea");
 
     let cells = Array(9).fill("");
     let currentPlayer = "X";
@@ -255,11 +285,9 @@
 
     function makeMove(cell, index) {
       if (!gameActive || cells[index] !== "") return;
-
       cells[index] = currentPlayer;
       cell.textContent = currentPlayer;
       cell.classList.add(currentPlayer.toLowerCase());
-
       const winPattern = checkWin();
       if (winPattern) {
         gameActive = false;
@@ -295,7 +323,8 @@
     function showPopup(message) {
       popupText.innerHTML = message;
       popup.classList.add("show");
-      gameArea.classList.add("popup-active"); // ✅ Step 3
+      statusText.textContent = "Game Over!";
+      gameArea.classList.add("popup-active");
     }
 
     function restart() {
@@ -303,22 +332,38 @@
       currentPlayer = "X";
       gameActive = true;
       popup.classList.remove("show");
-      gameArea.classList.remove("popup-active"); // ✅ Step 3
+      gameArea.classList.remove("popup-active");
       createBoard();
       updateTurnUI();
     }
 
     function updateTurnUI() {
       statusText.textContent = `Player ${currentPlayer}'s turn`;
+      statusText.classList.remove("slide-up");
+      void statusText.offsetWidth;
+      statusText.classList.add("slide-up");
       document.body.classList.remove("x-turn", "o-turn");
       document.body.classList.add(`${currentPlayer.toLowerCase()}-turn`);
     }
 
     function startGame() {
       startScreen.classList.remove("show");
-      gameActive = true;
-      createBoard();
-      updateTurnUI();
+      showGameStartPopup();
+    }
+
+    function showGameStartPopup() {
+      gameStartPopup.style.display = "flex";
+      gameArea.classList.remove("game-visible");
+      gameArea.classList.add("game-hidden");
+
+      setTimeout(() => {
+        gameStartPopup.style.display = "none";
+        gameArea.classList.remove("game-hidden");
+        gameArea.classList.add("game-visible");
+        gameActive = true;
+        createBoard();
+        updateTurnUI();
+      }, 950);
     }
 
     function openMenu() {
@@ -334,7 +379,7 @@
     function goHome() {
       menuScreen.classList.remove("show");
       popup.classList.remove("show");
-      gameArea.classList.remove("popup-active"); // ✅ Step 3
+      gameArea.classList.remove("popup-active");
       startScreen.classList.add("show");
       cells = Array(9).fill("");
       currentPlayer = "X";
