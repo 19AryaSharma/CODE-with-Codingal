@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JavaScript Array</title>
+    </head>
+    <body>
+        
+       <h2>javascript arrays</h2>
+       <h2></h2>
+       <p>The join( ) method join array elements into a string and the pop( ) method remotes the last element from an array.</p>
+
+       <p id="demo"></p>
+        <!--These are the first to tenth pops-->
+       <p id="myfirstpop"></p>
+         <p id="mysecondpop"></p>
+         <p id="mythirdpop"></p>
+          <p id="myfourthpop"></p>
+           <p id="myfifthpop"></p>
+            <p id="mysixthpop"></p>
+             <p id="myseventhpop"></p>
+              <p id="myeighthpop"></p>
+               <p id="myninthpop"></p>
+                <p id="mytenthpop"></p>
+         <script>
+            // Create an array named Transport with various modes of transportation
+            var Transport = ["Bike", "Train", "bus", "Car","Flight", "Ship", "Truck", "Tram", "Subway", "Helicopter"];
+            var text = Transport.join(" , ");// Join method used here to join the elements of the array into a string
+            document.getElementById("demo").innerHTML = text;
+            var myfirstpop = Transport.pop();
+            document.getElementById("myfirstpop").innerHTML = "The first pop is: " + "(" + myfirstpop + ")";
+            var mysecondpop = Transport.pop();
+            document.getElementById("mysecondpop").innerHTML = "The second pop is: " + "(" + mysecondpop  + ")";     
+            var mythirdpop = Transport.pop();
+            document.getElementById("mythirdpop").innerHTML = "The third pop is: " + "(" + mythirdpop + ")";
+            var myfourthpop = Transport.pop();
+            document.getElementById("myfourthpop").innerHTML = "The fourth pop is: " + "(" + myfourthpop + ")"; 
+            var myfifthpop = Transport.pop();
+            document.getElementById("myfifthpop").innerHTML = "The fifth pop is: " + "(" + myfifthpop + ")";
+            var mysixthpop = Transport.pop();
+            document.getElementById("mysixthpop").innerHTML = "The sixth pop is: " + "(" + mysixthpop + ")";
+            var myseventhpop = Transport.pop();
+            document.getElementById("myseventhpop").innerHTML = "The seventh pop is: " + "(" + myseventhpop + ")";
+            var myeighthpop = Transport.pop();
+            document.getElementById("myeighthpop").innerHTML = "The eighth pop is: " + "(" + myeighthpop + ")";
+            var myninthpop = Transport.pop();
+            document.getElementById("myninthpop").innerHTML = "The ninth pop is: " + "(" + myninthpop + ")";
+            var mytenthpop = Transport.pop();
+            document.getElementById("mytenthpop").innerHTML = "The tenth pop is: " + "(" + mytenthpop + ")";
+         </script>
+    </body>
+</html>
