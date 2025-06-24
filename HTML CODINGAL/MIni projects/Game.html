@@ -387,6 +387,212 @@
     }
 
     document.body.classList.add("x-turn");
+
+
+    // Initialize the game
+    document.addEventListener("DOMContentLoaded", () => {
+      createBoard();
+      updateTurnUI();
+      gameActive = true;
+    });
+    // Prevent default context menu on right-click
+    document.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+    }); 
+    // Prevent default text selection on double-click
+    document.addEventListener("selectstart", (e) => {
+      e.preventDefault();
+    });
+    // Prevent default touch actions
+    document.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+    }, { passive: false }); 
+    // Prevent default pinch-to-zoom
+    document.addEventListener("gesturestart", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default double-tap zoom
+    document.addEventListener("dblclick", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default long-press context menu
+    document.addEventListener("touchend", (e) => {
+      if (e.target.tagName === "DIV" && e.target.classList.contains("cell")) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("touchmove", (e) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    // Prevent default swipe gestures
+    document.addEventListener("touchstart", (e) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("touchmove", (e) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("gesturechange", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("gestureend", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("touchcancel", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("touchstart", (e) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("touchmove", (e) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("gesturestart", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("gesturechange", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("gestureend", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("touchcancel", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("touchstart", (e) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("touchmove", (e) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("gesturestart", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("gesturechange", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("gestureend", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("touchcancel", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("touchstart", (e) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("touchmove", (e) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("gesturestart", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("gesturechange", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("gestureend", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("touchcancel", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("touchstart", (e) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("touchmove", (e) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("gesturestart", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("gesturechange", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("gestureend", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("touchcancel", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+
+    document.addEventListener("touchstart", (e) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("touchmove", (e) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("gesturestart", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("gesturechange", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("gestureend", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    // Prevent default pinch-to-zoom on mobile
+    document.addEventListener("touchcancel", (e) => {
+      e.preventDefault();
+    }, { passive: false });
   </script>
-</body>
+  </body>
 </html>
