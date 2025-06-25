@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <p>Finding the lowest and largest Number with help of argument objects</p>
+   
+     <p id="resultlowest"></p>
+    <script>
+        function findlowest() {
+            var lowest = arguments[0];
+            for (var i = 1; i < arguments.length; i++) {
+                if (arguments[i] < lowest) {
+                    lowest = arguments[i];
+                }
+            }
+            return lowest;
+        }
+        document.getElementById("resultlowest").innerHTML = "The lowest number is: " + findlowest(3, 5, 7, 2, 8);
+    </script> 
+
+     <p id="resultmax"></p>
+    <script>
+        function findMax() {
+            var max = arguments[0];
+            for (var i = 1; i < arguments.length; i++) {
+                if (arguments[i] > max) {
+                    max = arguments[i];
+                }
+            }
+            return max;
+        }
+        document.getElementById("resultmax").innerHTML = "The largest number is: " + findMax(3, 5, 7, 2, 8);
+     </script>
+</body>
+</html>
