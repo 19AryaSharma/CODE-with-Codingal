@@ -1,0 +1,19 @@
+body {
+    background-color: cyan;
+}
+
+.pizza-image {
+    width: 300px;
+    height: 200px;
+    border-radius: 15px;
+    float: right;
+    margin-left: 20px;
+}
+
+.pastry-image {
+    width: 300px;
+    height: 200px;
+    border-radius: 15px;
+    float: right;
+    margin-left: 20px;
+}
