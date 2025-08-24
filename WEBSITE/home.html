@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Website</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #89f7fe, #66a6ff);
+      position: relative;
+    }
+
+
+    .navbar {
+      background: linear-gradient(90deg, cyan, skyblue);
+      padding: 12px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar .logo img {
+      height: 40px;
+      width: auto;
+      border-radius: 6px;
+    }
+
+    .navbar .links a {
+      color: brown;
+      text-decoration: none;
+      padding: 12px 20px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border-radius: 6px;
+      margin: 0 5px;
+    }
+
+    .navbar .links a:hover {
+      background-color: white;
+      color: #0073e6;
+      box-shadow: 0 0 8px rgba(0, 115, 230, 0.6);
+    }
+
+    .navbar .links a.active {
+      background-color: #4CAF50;
+      color: white;
+      box-shadow: 0 0 10px rgba(76, 175, 80, 0.7);
+    }
+
+    .navbar .links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+    }
+
+
+    #myCarousel {
+      width: 80%;
+      max-width: 800px;
+      margin: 20px auto;
+      border: 8px solid #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    #myCarousel img {
+      height: 400px;
+      object-fit: cover;
+      width: 100%;
+    }
+
+
+    section {
+      padding: 100px 20px;
+      height: 100vh;
+      text-align: center;
+    }
+
+    #home {
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    #about {
+      background: rgba(255, 255, 0, 0.3);
+    }
+
+    #gallery {
+      background: rgba(0, 255, 255, 0.3);
+    }
+
+    #contact {
+      background: rgba(255, 0, 255, 0.3);
+    }
+  </style>
+</head>
+
+<body data-spy="scroll" data-target=".navbar" data-offset="50">
+
+  <div class="navbar">
+    <div class="logo">
+      <img src="logo.png" alt="Logo"><b style="font-size: larger; "> Codingal</b></img>
+    </div>
+    <div class="links">
+      <a class="active" href="home.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#contact">Contact Us</a>
+    </div>
+  </div>
+
+
+
+  <div id="myCarousel" class="carousel slide" data-ride="carousel">
+
+    <ol class="carousel-indicators">
+      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+      <li data-target="#myCarousel" data-slide-to="1"></li>
+      <li data-target="#myCarousel" data-slide-to="2"></li>
+    </ol>
+
+
+    <div class="carousel-inner">
+      <div class="item active">
+        <img src="Codingal-Picsart-AiImageEnhancer.png" alt="Image 1">
+      </div>
+      <div class="item">
+        <img src="codingal1-Picsart-AiImageEnhancer.jpg" alt="Image 2">
+      </div>
+      <div class="item">
+        <img src="codingal2-Picsart-AiImageEnhancer.jpg" alt="Image 3">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var myindex = 0;
+    carousel();
+
+    function carousel() {
+      var i;
+      var x = document.getElementsByClassName("mySlides");
+      for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+      }
+      myindex++;
+      if (myindex > x.length) { myindex = 1 }
+      x[myindex - 1].style.display = "block";
+      setTimeout(carousel, 3000);
+    }
+
+  </script>
+
+
+
+</body>
+
+</html>
